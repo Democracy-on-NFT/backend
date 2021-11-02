@@ -1,5 +1,5 @@
 # backend
-The backend for iWantToHelp platform
+The backend for BC Democracy platform
 
 * Ruby version
   * Ruby: `2.7.4`
