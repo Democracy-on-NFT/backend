@@ -2,6 +2,7 @@
 
 class Entities
   class County < Grape::Entity
+    expose :id, documentation: { type: Integer }
     expose :name
   end
 end
