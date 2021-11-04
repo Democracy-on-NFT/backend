@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 class Entities
-  class County < Grape::Entity
+  class ElectoralCircumscription < Grape::Entity
     expose :id, documentation: { type: Integer }
-    expose :name
+    expose :number, documentation: { type: Integer }
+    expose :county_name
   end
 end
