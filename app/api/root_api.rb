@@ -7,7 +7,6 @@ class RootApi < Grape::API
     error!('Not Found', 404)
   end
 
-  mount CountiesApi
   mount ElectoralCircumscriptionsApi
 
   add_swagger_documentation(
