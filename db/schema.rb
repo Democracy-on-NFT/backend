@@ -10,10 +10,29 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_05_121749) do
+ActiveRecord::Schema.define(version: 2021_11_05_135848) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "deputies", force: :cascade do |t|
+    t.string "name"
+    t.string "image_link"
+    t.string "email"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "deputy_parties", force: :cascade do |t|
+    t.bigint "deputy_id"
+    t.bigint "party_id"
+    t.date "start_date"
+    t.date "end_date"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["deputy_id"], name: "index_deputy_parties_on_deputy_id"
+    t.index ["party_id"], name: "index_deputy_parties_on_party_id"
+  end
 
   create_table "electoral_circumscriptions", force: :cascade do |t|
     t.string "county_name"
@@ -34,6 +53,8 @@ ActiveRecord::Schema.define(version: 2021_11_05_121749) do
     t.text "address"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "deputy_id"
+    t.index ["deputy_id"], name: "index_offices_on_deputy_id"
   end
 
   create_table "parties", force: :cascade do |t|
@@ -52,4 +73,5 @@ ActiveRecord::Schema.define(version: 2021_11_05_121749) do
     t.index ["party_id"], name: "index_party_legislatures_on_party_id"
   end
 
+  add_foreign_key "offices", "deputies"
 end

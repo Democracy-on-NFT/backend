@@ -19,4 +19,15 @@ class Entities
     expose :start_date, documentation: { type: Date }
     expose :end_date, documentation: { type: Date }
   end
+
+  class Office < Grape::Entity
+    expose :address
+  end
+
+  class Deputy < Grape::Entity
+    expose :id, documentation: { type: Integer }
+    expose :image_link
+    expose :email
+    expose :offices, using: Office
+  end
 end
