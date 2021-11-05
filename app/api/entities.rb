@@ -6,4 +6,10 @@ class Entities
     expose :number, documentation: { type: Integer }
     expose :county_name
   end
+
+  class Party < Grape::Entity
+    expose :id, documentation: { type: Integer }
+    expose :name
+    expose :link
+  end
 end
