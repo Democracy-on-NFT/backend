@@ -12,4 +12,11 @@ class Entities
     expose :name
     expose :link
   end
+
+  class Legislature < Grape::Entity
+    expose :id, documentation: { type: Integer }
+    expose :title
+    expose :start_date, documentation: { type: Date }
+    expose :end_date, documentation: { type: Date }
+  end
 end

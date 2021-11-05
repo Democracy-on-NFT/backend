@@ -9,6 +9,7 @@ class RootApi < Grape::API
 
   mount ElectoralCircumscriptionsApi
   mount PartiesApi
+  mount LegislaturesApi
 
   add_swagger_documentation(
     format: :json,
