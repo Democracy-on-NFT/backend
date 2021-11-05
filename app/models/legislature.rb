@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class Legislature < ApplicationRecord
-  # has_many :legislature_party
-  # has_many :parties, through: :legislature_party
+  has_many :party_legislature
+  has_many :parties, through: :party_legislature
 
   validates :start_date, presence: true
   validates :end_date, presence: true

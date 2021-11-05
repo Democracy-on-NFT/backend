@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_05_074317) do
+ActiveRecord::Schema.define(version: 2021_11_05_092036) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -35,6 +35,15 @@ ActiveRecord::Schema.define(version: 2021_11_05_074317) do
     t.string "link"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "party_legislatures", force: :cascade do |t|
+    t.bigint "party_id"
+    t.bigint "legislature_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["legislature_id"], name: "index_party_legislatures_on_legislature_id"
+    t.index ["party_id"], name: "index_party_legislatures_on_party_id"
   end
 
 end
