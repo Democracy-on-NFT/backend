@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_05_135848) do
+ActiveRecord::Schema.define(version: 2021_11_05_145558) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -21,6 +21,17 @@ ActiveRecord::Schema.define(version: 2021_11_05_135848) do
     t.string "email"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "deputy_legislatures", force: :cascade do |t|
+    t.bigint "deputy_id"
+    t.bigint "legislature_id"
+    t.bigint "electoral_circumscription_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["deputy_id"], name: "index_deputy_legislatures_on_deputy_id"
+    t.index ["electoral_circumscription_id"], name: "index_deputy_legislatures_on_electoral_circumscription_id"
+    t.index ["legislature_id"], name: "index_deputy_legislatures_on_legislature_id"
   end
 
   create_table "deputy_parties", force: :cascade do |t|

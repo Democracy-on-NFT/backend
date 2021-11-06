@@ -1,8 +1,11 @@
 # frozen_string_literal: true
 
 class Legislature < ApplicationRecord
-  has_many :party_legislature
-  has_many :parties, through: :party_legislature
+  has_many :party_legislatures
+  has_many :parties, through: :party_legislatures
+
+  has_many :deputy_legislatures
+  has_many :deputies, through: :deputy_legislatures
 
   validates :start_date, presence: true
   validates :end_date, presence: true
