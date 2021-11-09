@@ -6,4 +6,5 @@ class DeputyLegislature < ApplicationRecord
   belongs_to :electoral_circumscription
 
   has_many :legislative_initiatives
+  has_many :signed_motions
 end
