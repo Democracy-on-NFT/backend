@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_05_145558) do
+ActiveRecord::Schema.define(version: 2021_11_09_104017) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -45,11 +45,31 @@ ActiveRecord::Schema.define(version: 2021_11_05_145558) do
     t.index ["party_id"], name: "index_deputy_parties_on_party_id"
   end
 
+  create_table "draft_decisions", force: :cascade do |t|
+    t.string "number"
+    t.date "date"
+    t.text "title"
+    t.bigint "deputy_legislature_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["deputy_legislature_id"], name: "index_draft_decisions_on_deputy_legislature_id"
+  end
+
   create_table "electoral_circumscriptions", force: :cascade do |t|
     t.string "county_name"
     t.integer "number"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "legislative_initiatives", force: :cascade do |t|
+    t.string "number"
+    t.date "date"
+    t.text "title"
+    t.bigint "deputy_legislature_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["deputy_legislature_id"], name: "index_legislative_initiatives_on_deputy_legislature_id"
   end
 
   create_table "legislatures", force: :cascade do |t|
@@ -84,5 +104,41 @@ ActiveRecord::Schema.define(version: 2021_11_05_145558) do
     t.index ["party_id"], name: "index_party_legislatures_on_party_id"
   end
 
+  create_table "questions", force: :cascade do |t|
+    t.bigint "deputy_legislature_id", null: false
+    t.integer "kind", limit: 2
+    t.string "number"
+    t.date "date"
+    t.text "title"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["deputy_legislature_id"], name: "index_questions_on_deputy_legislature_id"
+  end
+
+  create_table "signed_motions", force: :cascade do |t|
+    t.text "title"
+    t.string "number"
+    t.date "date"
+    t.integer "status", limit: 2
+    t.bigint "deputy_legislature_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["deputy_legislature_id"], name: "index_signed_motions_on_deputy_legislature_id"
+  end
+
+  create_table "speeches", force: :cascade do |t|
+    t.text "title"
+    t.date "date"
+    t.bigint "deputy_legislature_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["deputy_legislature_id"], name: "index_speeches_on_deputy_legislature_id"
+  end
+
+  add_foreign_key "draft_decisions", "deputy_legislatures"
+  add_foreign_key "legislative_initiatives", "deputy_legislatures"
   add_foreign_key "offices", "deputies"
+  add_foreign_key "questions", "deputy_legislatures"
+  add_foreign_key "signed_motions", "deputy_legislatures"
+  add_foreign_key "speeches", "deputy_legislatures"
 end
