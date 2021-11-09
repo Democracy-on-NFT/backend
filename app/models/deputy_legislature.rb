@@ -9,4 +9,5 @@ class DeputyLegislature < ApplicationRecord
   has_many :signed_motions
   has_many :speeches
   has_many :draft_decisions
+  has_many :questions
 end
