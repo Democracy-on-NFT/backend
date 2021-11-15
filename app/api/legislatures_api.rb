@@ -12,5 +12,31 @@ class LegislaturesApi < Grape::API
       legislatures = Legislature.all
       present legislatures, with: Entities::Legislature
     end
+
+    route_param :id do
+      desc 'Get parties' do
+        tags %w[legislature]
+        http_codes [
+          { code: 200, model: Entities::Party, message: 'Parties list' },
+          { code: 404, message: 'Legislature not found' }
+        ]
+      end
+      get 'parties' do
+        legislature = Legislature.find(params[:id])
+        present legislature.parties, with: Entities::Party
+      end
+
+      desc 'Get deputies' do
+        tags %w[legislature]
+        http_codes [
+          { code: 200, model: Entities::Deputy, message: 'Deputies list' },
+          { code: 404, message: 'Legislature not found' }
+        ]
+      end
+      get 'deputies' do
+        legislature = Legislature.find(params[:id])
+        present legislature.deputies, with: Entities::Deputy
+      end
+    end
   end
 end
