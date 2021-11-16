@@ -22,6 +22,7 @@ AllCops:
     - 'db/**/*'
     - 'bin/*'
     - 'test/**/*'
+    - app/services/parlament_scraper.rb
 
 Lint/RedundantCopDisableDirective:
   Enabled: false
@@ -34,6 +35,8 @@ Metrics/LineLength:
 
 Metrics/MethodLength:
   Max: 20
+  Exclude:
+    - app/services/*
 
 Metrics/BlockLength:
   ExcludedMethods:
@@ -50,3 +53,4 @@ Metrics/BlockLength:
 Metrics/ClassLength:
   Exclude:
     - app/api/**/*
+    - app/services/*
