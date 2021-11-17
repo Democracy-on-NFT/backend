@@ -7,10 +7,10 @@ def seed_electoral_circumscriptions
 
   pp "Seeding ECs from #{filename}..."
 
-  CSV.foreach(filename, :headers => true) do |row|
+  CSV.foreach(filename, headers: true) do |row|
     ec_information = {
       number: row[0],
-      county_name: row[1]
+      county_name: row[1].titleize
     }
     ElectoralCircumscription.where(ec_information).first_or_create!(ec_information)
   end
