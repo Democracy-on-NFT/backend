@@ -6,32 +6,14 @@ class StoreDeputyInfo
   end
 
   def call
-    deputy = find_or_create_deputy(data)
-    ec_number = data[:electoral_circumscription].to_i
-    electoral_circumscription = electoral_circumscription_by(ec_number)
-    legislature = legislature_by
-
-    find_or_create_deputy_legislature(deputy.id, legislature.id, electoral_circumscription.id)
-
-    data[:addresses].each do |address|
-      find_or_create_office(deputy.id, address)
-    end
-
-    data[:parties].each do |deputy_party|
-      party = party_by(deputy_party[:party])
-      # there may be some issues with encoding, eg. Neafiliați
-      next if party.blank?
-
-      find_or_create_deputy_party(deputy.id, party.id, deputy_party)
-    end
-
+    deputy_legislature
   end
 
   private
 
   attr_reader :data
 
-  def find_or_create_deputy(data)
+  def find_or_create_deputy
     Deputy.find_or_create_by(name: data[:name]) do |deputy|
       deputy.image_link = data[:picture_url]
       deputy.email = data[:email]
@@ -67,5 +49,33 @@ class StoreDeputyInfo
 
   def find_or_create_office(deputy_id, address)
     Office.find_or_create_by(deputy_id: deputy_id, address: address)
+  end
+
+  def offices_mapping(deputy_id)
+    data[:addresses].each do |address|
+      find_or_create_office(deputy_id, address)
+    end
+  end
+
+  def parties_mapping(deputy_id)
+    data[:parties].each do |deputy_party|
+      party = party_by(deputy_party[:party])
+      next if party.blank?
+
+      find_or_create_deputy_party(deputy_id, party.id, deputy_party)
+    end
+  end
+
+  def deputy_legislature
+    deputy = find_or_create_deputy
+
+    offices_mapping(deputy.id)
+    parties_mapping(deputy.id)
+
+    find_or_create_deputy_legislature(
+      deputy.id,
+      legislature_by.id,
+      electoral_circumscription_by(data[:electoral_circumscription].to_i).id
+    )
   end
 end
