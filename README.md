@@ -2,8 +2,8 @@
 The backend for BC Democracy platform
 
 * Ruby version
-  * Ruby: `2.7.4`
-  * Create and use the gemset: `rvm use 2.7.4@parlament [--create]`
+  * Ruby: `2.7.2`
+  * Create and use the gemset: `rvm use 2.7.2@parlament [--create]`
   * Rails: `6.1.4`
 
 * Node.js and yarn dependencies
