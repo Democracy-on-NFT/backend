@@ -8,4 +8,6 @@ class Deputy < ApplicationRecord
 
   has_many :deputy_legislatures
   has_many :legislatures, through: :deputy_legislatures
+
+  enum room: { deputat: 1, senator: 0 }
 end
