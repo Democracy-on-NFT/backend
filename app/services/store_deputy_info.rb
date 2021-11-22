@@ -13,12 +13,16 @@ class StoreDeputyInfo
 
   attr_reader :data
 
+  # rubocop:disable Metrics/AbcSize
   def find_or_create_deputy
     Deputy.find_or_create_by(name: data[:name]) do |deputy|
       deputy.image_link = data[:picture_url]
       deputy.email = data[:email]
+      deputy.date_of_birth = parse_date(data[:date_of_birth].to_s)
+      deputy.room = deputy_type(data[:room])
     end
   end
+  # rubocop:enable Metrics/AbcSize
 
   def find_or_create_deputy_legislature(deputy_id, legislature_id, ec_id)
     DeputyLegislature.find_or_create_by(
@@ -77,5 +81,15 @@ class StoreDeputyInfo
       legislature_by.id,
       electoral_circumscription_by(data[:electoral_circumscription].to_i).id
     )
+  end
+
+  def deputy_type(room)
+    room == 'DEPUTAT' ? 1 : 0
+  end
+
+  def parse_date(string_date)
+    Date.parse(string_date)
+  rescue Date::Error
+    nil
   end
 end
