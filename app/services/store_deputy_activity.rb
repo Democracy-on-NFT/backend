@@ -104,6 +104,16 @@ class StoreDeputyActivity
     end
   end
 
+  def deputy_legislature_activity_counts
+    deputy_legislature.update(
+      legislative_initiatives_count: count_or_zero(:legislative_initiatives),
+      signed_motions_count: count_or_zero(:motions_signed),
+      speeches_count: count_or_zero(:speakings),
+      draft_decisions_count: count_or_zero(:draft_decisions),
+      questions_count: count_or_zero(:questions)
+    )
+  end
+
   def parse_date(string_date)
     Date.parse(string_date)
   rescue Date::Error
@@ -111,12 +121,15 @@ class StoreDeputyActivity
   end
 
   def question_type(kind)
-    return 1 if kind == 'Interpelarea'
+    kind == 'Interpelarea' ? 1 : 0
+  end
 
-    0
+  def count_or_zero(key)
+    data.key?(key) ? data[key].count : 0
   end
 
   def deputy_activity
+    deputy_legislature_activity_counts
     legislative_initiatives_mapping
     motions_signed_mapping
     speeches_mapping

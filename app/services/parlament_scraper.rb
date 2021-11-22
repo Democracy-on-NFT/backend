@@ -14,7 +14,7 @@ class ParlamentScraper < Kimurai::Base
     @base_uri = 'http://www.cdep.ro'
     response = browser.current_response
 
-    response.css('div.grup-parlamentar-list table tbody tr').first(8).last(2).each do |line|
+    response.css('div.grup-parlamentar-list table tbody tr').first(8).each do |line|
       href = line.css('td')[1].css('a').attr('href')
       browser.visit(@base_uri + href)
       app_response = browser.current_response
