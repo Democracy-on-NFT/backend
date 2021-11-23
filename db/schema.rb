@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_19_094931) do
+ActiveRecord::Schema.define(version: 2021_11_22_121955) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -21,6 +21,8 @@ ActiveRecord::Schema.define(version: 2021_11_19_094931) do
     t.string "email"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "room", limit: 2
+    t.date "date_of_birth"
   end
 
   create_table "deputy_legislatures", force: :cascade do |t|
@@ -29,6 +31,11 @@ ActiveRecord::Schema.define(version: 2021_11_19_094931) do
     t.bigint "electoral_circumscription_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "legislative_initiatives_count"
+    t.integer "signed_motions_count"
+    t.integer "speeches_count"
+    t.integer "draft_decisions_count"
+    t.integer "questions_count"
     t.index ["deputy_id"], name: "index_deputy_legislatures_on_deputy_id"
     t.index ["electoral_circumscription_id"], name: "index_deputy_legislatures_on_electoral_circumscription_id"
     t.index ["legislature_id"], name: "index_deputy_legislatures_on_legislature_id"

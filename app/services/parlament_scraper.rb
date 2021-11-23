@@ -14,7 +14,7 @@ class ParlamentScraper < Kimurai::Base
     @base_uri = 'http://www.cdep.ro'
     response = browser.current_response
 
-    response.css('div.grup-parlamentar-list table tbody tr').first(8).last(2).each do |line|
+    response.css('div.grup-parlamentar-list table tbody tr').first(8).each do |line|
       href = line.css('td')[1].css('a').attr('href')
       browser.visit(@base_uri + href)
       app_response = browser.current_response
@@ -34,6 +34,8 @@ class ParlamentScraper < Kimurai::Base
     }
 
     item[:name] = response&.css('div.boxTitle h1')&.text&.squish
+    item[:room] = response&.css('div.boxDep h3')[0]&.text&.squish
+    item[:date_of_birth] = format_date(response&.css('div.profile-pic-dep')&.text&.squish)
     item[:picture_url] = @base_uri + response&.css('div.profile-pic-dep a img')&.attr('src')&.text&.squish
     item[:email] = response&.css('span.mailInfo')&.text&.squish
     item[:party] = response&.css('div.boxDep')[1]&.css('table tr td')&.text&.squish
@@ -219,8 +221,9 @@ class ParlamentScraper < Kimurai::Base
       noi: 11,
       dec: 12
     }
-    text = text.split.last(2)
-    text.unshift(1)
+    text = text.split.last(3)
+    text.shift if text.first.to_i == 0
+    text.unshift(1) if text.size < 3
     text[1] = h[text[1][..2].to_sym]
     parse_date(text.join('-'))
   end
