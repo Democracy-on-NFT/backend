@@ -1,13 +1,12 @@
 # frozen_string_literal: true
 
 class DeputiesApi < Grape::API
-
   resource :deputies do
     desc 'Deputy list' do
       tags %w[deputies]
       http_codes [
-                   { code: 200, model: Entities::Deputy, message: 'Deputy list' }
-                 ]
+        { code: 200, model: Entities::Deputy, message: 'Deputy list' }
+      ]
     end
 
     get do
@@ -16,20 +15,12 @@ class DeputiesApi < Grape::API
     end
 
     route_param :id do
-      desc 'Get parties' do
-        tags %w[legislature]
+      desc 'Get activity' do
+        tags %w[deputies]
         http_codes [
-                     { code: 200, model: Entities::Party, message: 'Parties list' },
-                     { code: 404, message: 'Legislature not found' }
-                   ]
-      end
-
-      params do
-        requires :legislature_id, type: Integer
-      end
-      get do
-        deputy = Deputy.find(params[:id])
-        legislature = deputy.legislatures.find(params[:legislature_id])
+          { code: 200, model: Entities::Activity, message: 'Activity list' },
+          { code: 404, message: 'Deputy Legislature not found!' }
+        ]
       end
 
       params do

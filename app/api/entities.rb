@@ -72,5 +72,4 @@ class Entities
     expose :speeches, using: Speech, documentation: { is_array: true }
     expose :draft_decisions, using: DraftDecision, documentation: { is_array: true }
   end
-
 end
