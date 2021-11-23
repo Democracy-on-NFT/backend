@@ -9,6 +9,7 @@ class Entities
 
   class Party < Grape::Entity
     expose :id, documentation: { type: Integer }
+    expose :abbreviation
     expose :name
     expose :link
   end

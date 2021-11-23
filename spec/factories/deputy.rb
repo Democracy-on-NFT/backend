@@ -5,6 +5,8 @@ FactoryBot.define do
     name { Faker::Name.name }
     image_link { Faker::File.file_name(dir: 'cdep', ext: 'jpg') }
     email { Faker::Internet.email }
+    date_of_birth { Faker::Date.birthday }
+    room { Deputy.rooms.values.sample }
 
     trait :with_offices do
       transient do

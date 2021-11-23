@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Deputy < ApplicationRecord
+  enum room: { deputat: 1, senator: 0 }
+
   has_many :offices
 
   has_many :deputy_parties
