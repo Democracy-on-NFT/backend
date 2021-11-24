@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-class PartiesPercentageApi < Grape::API
+class AggregationsApi < Grape::API
   resource :parties_percentage do
     desc 'Parties percentage per county' do
-      tags %w[party]
+      tags %w[aggregation]
       http_codes [
         { code: 200, message: 'Parties percentage per county' }
       ]
@@ -21,6 +21,7 @@ class PartiesPercentageApi < Grape::API
         circumscription = circumscription_deputy_hash[key]
         party = party_deputy_hash[key]
         hash[circumscription] = {} unless hash.keys.include? circumscription
+
         if hash[circumscription][party]
           hash[circumscription][party] += 1
         else
