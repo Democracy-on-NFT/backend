@@ -10,7 +10,7 @@ class DeputiesApi < Grape::API
     end
 
     get do
-      deputies = Deputy.all
+      deputies = Deputy.includes(:offices)
       present deputies, with: Entities::Deputy
     end
 
