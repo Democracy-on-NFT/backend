@@ -90,7 +90,7 @@ class ParlamentScraper < Kimurai::Base
       list.map { |li| array << li&.text&.squish }
     else
       box&.css('p').map do |p|
-        p&.text&.split("\n").map { |address| array << address.squish[3..] }
+        p&.text&.split("\n").map { |address| array << address.squish }
       end
     end
     item[:addresses] = array
