@@ -1,8 +1,8 @@
-abbreviation,name,link
-PNL,Partidul Național Liberal,https://pnl.ro/
-PSD,Partidul Social Democrat,https://www.psd.ro/
-USR,Uniunea Salvați România,https://www.usr.ro/
-AUR,Alianța pentru Unirea Românilor,https://partidulaur.ro/
-UDMR,Uniunea Democrată a Maghiarilor din România,http://udmr.ro/
-MIN,Minorități,http://parl2019ro.eu/pls/parlam/structura2015.gp?idg=7&leg=2016
-NA,Neafiliați,http://www.cdep.ro/pls/parlam/structura2015.gp?idl=1&cam=2&leg=2020&idg=0
+abbreviation,name,link,logo
+PNL,Partidul Național Liberal,https://pnl.ro,http://www.cdep.ro/camera_deputatilor/grupuri/2016pnl.jpg
+PSD,Partidul Social Democrat,https://www.psd.ro,http://www.cdep.ro/camera_deputatilor/grupuri/2016psd.jpg
+USR,Uniunea Salvați România,https://www.usr.ro,http://www.cdep.ro/camera_deputatilor/grupuri/logousr.png
+AUR,Alianța pentru Unirea Românilor,https://partidulaur.ro,http://www.cdep.ro/camera_deputatilor/grupuri/logoaur.png
+UDMR,Uniunea Democrată a Maghiarilor din România,http://udmr.ro,http://www.cdep.ro/camera_deputatilor/grupuri/2016udmr.png
+MIN,Minorități,http://parl2019ro.eu/pls/parlam/structura2015.gp?idg=7&leg=2016,http://www.cdep.ro/camera_deputatilor/grupuri/logo_mino1.jpg
+NA,Neafiliați,http://www.cdep.ro/pls/parlam/structura2015.gp?idl=1&cam=2&leg=2020&idg=0,https://tbilisi.mae.ro/sites/tbilisi.mae.ro/files/images/antet_ro.jpg
