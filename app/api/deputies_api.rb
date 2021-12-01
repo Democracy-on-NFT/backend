@@ -8,9 +8,12 @@ class DeputiesApi < Grape::API
         { code: 200, model: Entities::Deputy, message: 'Deputy list' }
       ]
     end
-
+    params do
+      optional :page, type: Integer, default: 1
+      optional :per_page, type: Integer, default: 20
+    end
     get do
-      deputies = Deputy.includes(:offices)
+      deputies = Deputy.includes(:offices).page(params[:page]).per(params[:per_page])
       present deputies, with: Entities::Deputy
     end
 

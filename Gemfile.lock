@@ -149,6 +149,18 @@ GEM
       concurrent-ruby (~> 1.0)
     jbuilder (2.11.3)
       activesupport (>= 5.0.0)
+    kaminari (1.2.1)
+      activesupport (>= 4.1.0)
+      kaminari-actionview (= 1.2.1)
+      kaminari-activerecord (= 1.2.1)
+      kaminari-core (= 1.2.1)
+    kaminari-actionview (1.2.1)
+      actionview
+      kaminari-core (= 1.2.1)
+    kaminari-activerecord (1.2.1)
+      activerecord
+      kaminari-core (= 1.2.1)
+    kaminari-core (1.2.1)
     kimurai (1.4.0)
       activesupport
       capybara (>= 2.15, < 4.0)
@@ -377,6 +389,7 @@ DEPENDENCIES
   grape-swagger
   grape-swagger-entity
   jbuilder (~> 2.7)
+  kaminari
   kimurai
   listen (~> 3.3)
   pg
