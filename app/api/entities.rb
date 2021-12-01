@@ -7,6 +7,11 @@ class Entities
     expose :county_name
   end
 
+  class Notification < Grape::Entity
+    expose :email
+    expose :electoral_circumscription, using: ElectoralCircumscription
+  end
+
   class Party < Grape::Entity
     expose :id, documentation: { type: Integer }
     expose :abbreviation
