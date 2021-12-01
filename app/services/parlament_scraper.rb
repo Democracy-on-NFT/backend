@@ -130,7 +130,7 @@ class ParlamentScraper < Kimurai::Base
           end
         end
         item[:speakings] = array
-      when 'Propuneri legislative iniţiate:'
+      when 'Propuneri legislative initiate:'
         item[:legislative_initiative_count] = value
         response&.css('div.grup-parlamentar-list table tbody tr').each do |li|
           val = li&.css('td')[1]&.text&.squish&.split('/')
@@ -141,7 +141,7 @@ class ParlamentScraper < Kimurai::Base
           }
         end
         item[:legislative_initiatives] = array
-      when 'Proiecte de hotarâre iniţiate:'
+      when 'Proiecte de hotarâre initiate:'
         item[:draft_decision_count] = value
         response&.css('div.grup-parlamentar-list table tbody tr').each do |li|
           val = li&.css('td')[1]&.text&.squish&.split('/')
@@ -152,7 +152,7 @@ class ParlamentScraper < Kimurai::Base
           }
         end
         item[:draft_decisions] = array
-      when 'Întrebari şi interpelări:'
+      when 'Întrebari si interpelari:'
         item[:question_count] = value
         response&.css('div.grup-parlamentar-list table tbody tr').each do |li|
           val = li&.css('td')[1]&.text&.squish&.split('/')
@@ -166,7 +166,7 @@ class ParlamentScraper < Kimurai::Base
           }
         end
         item[:questions] = array
-      when 'Moţiuni:'
+      when 'Motiuni:'
         item[:motion_signed_count] = value
         response&.css('table.video-table tbody tr').each do |li|
           val = li&.css('td')[3]&.text&.squish&.split('/')
