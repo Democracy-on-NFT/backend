@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_28_200254) do
+ActiveRecord::Schema.define(version: 2021_12_01_155251) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -87,6 +87,14 @@ ActiveRecord::Schema.define(version: 2021_11_28_200254) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "notifications", force: :cascade do |t|
+    t.string "email"
+    t.bigint "electoral_circumscription_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["electoral_circumscription_id"], name: "index_notifications_on_electoral_circumscription_id"
+  end
+
   create_table "offices", force: :cascade do |t|
     t.text "address"
     t.datetime "created_at", precision: 6, null: false
@@ -146,6 +154,7 @@ ActiveRecord::Schema.define(version: 2021_11_28_200254) do
 
   add_foreign_key "draft_decisions", "deputy_legislatures"
   add_foreign_key "legislative_initiatives", "deputy_legislatures"
+  add_foreign_key "notifications", "electoral_circumscriptions"
   add_foreign_key "offices", "deputies"
   add_foreign_key "questions", "deputy_legislatures"
   add_foreign_key "signed_motions", "deputy_legislatures"
