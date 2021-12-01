@@ -45,6 +45,7 @@ class DeputiesApi < Grape::API
       get do
         deputy_legislature = DeputyLegislature.where(deputy_id: params[:id],
                                                      legislature_id: params[:legislature_id]).first
+        error!('Deputy not found!', 404) if deputy_legislature.blank?
         present deputy_legislature.deputy, with: Entities::FullDeputy
       end
     end

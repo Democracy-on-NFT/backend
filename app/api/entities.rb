@@ -51,7 +51,7 @@ class Entities
   end
 
   class FullDeputy < Deputy
-    expose :offices, using: Office
+    expose :offices, using: Office, documentation: { is_array: true }
     expose :deputy_parties, using: DeputyParty, as: :parties, documentation: { is_array: true }
     expose :deputy_legislatures, using: DeputyLegislature, as: :activities, documentation: { is_array: true }
   end
