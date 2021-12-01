@@ -21,6 +21,10 @@ class Entities
     expose :end_date, documentation: { type: Date }
   end
 
+  class FullParty < Party
+    expose :legislatures, using: Legislature, documentation: { is_array: true }
+  end
+
   class Office < Grape::Entity
     expose :address
   end
