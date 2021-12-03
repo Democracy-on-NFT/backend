@@ -1,6 +1,36 @@
 # frozen_string_literal: true
 
 class AggregationsApi < Grape::API
+  resource :deputies_aggregations do
+    desc 'Number of deputies by county' do
+      tags %w[aggregation]
+      http_codes [
+        { code: 200, message: 'Number of deputies by county' }
+      ]
+    end
+    params do
+      requires :legislature_id, type: Integer
+    end
+    get do
+      deputies_by_county = DeputyLegislature.where(legislature_id: params[:legislature_id])
+        .includes(:electoral_circumscription, :deputy)
+        .group_by { |dl| dl.electoral_circumscription.county_name }
+
+      deputies_number_by_county = deputies_by_county.each_with_object({}) do |(key, value), hash|
+        count_by_room = { deputati: 0, senatori: 0 }
+        value.each do |dl|
+          if dl.deputy.room == 'deputat'
+            count_by_room[:deputati] += 1
+          else
+            count_by_room[:senatori] += 1
+          end
+        end
+        hash[key] = count_by_room
+      end
+
+      present deputies_number_by_county
+    end
+  end
   resource :parties_percentage do
     desc 'Parties percentage per county' do
       tags %w[aggregation]
