@@ -17,6 +17,7 @@ class Entities
     expose :abbreviation
     expose :name
     expose :link
+    expose :logo
   end
 
   class Legislature < Grape::Entity
