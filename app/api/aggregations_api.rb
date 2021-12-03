@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class AggregationsApi < Grape::API
-  resource :deputies_aggregations do
+  resource :deputies_by_county do
     desc 'Number of deputies by county' do
       tags %w[aggregation]
       http_codes [
@@ -31,6 +31,43 @@ class AggregationsApi < Grape::API
       present deputies_number_by_county
     end
   end
+
+  resource :deputies_by_community do
+    desc 'Number of deputies by community' do
+      tags %w[aggregation]
+      http_codes [
+        { code: 200, message: 'Number of deputies by community' }
+      ]
+    end
+    params do
+      requires :legislature_id, type: Integer
+    end
+    get do
+      deputies_by_room = DeputyLegislature.where(legislature_id: params[:legislature_id])
+        .includes(:electoral_circumscription, :deputy)
+        .group_by { |dl| dl.deputy.room }
+
+      total_diaspora_deputies = deputies_by_room['deputat'].select { |dl| dl.electoral_circumscription_id == 44 }.count
+      total_ro_deputies = deputies_by_room['deputat'].count - total_diaspora_deputies
+
+      total_diaspora_senators = deputies_by_room['senator'].select { |dl| dl.electoral_circumscription_id == 44 }.count
+      total_ro_senators = deputies_by_room['senator'].count - total_diaspora_senators
+
+      deputies_by_community = {
+        diaspora: {
+          deputati: total_diaspora_deputies,
+          senatori: total_diaspora_senators
+        },
+        romania: {
+          deputati: total_ro_deputies,
+          senatori: total_ro_senators
+        }
+      }
+
+      present deputies_by_community
+    end
+  end
+
   resource :parties_percentage do
     desc 'Parties percentage per county' do
       tags %w[aggregation]
