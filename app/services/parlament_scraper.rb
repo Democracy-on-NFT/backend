@@ -46,12 +46,24 @@ class ParlamentScraper < Kimurai::Base
     # }
     item[:electoral_circumscription] = response&.css('div.boxDep')[0]&.text&.squish&.split[6]&.split(".").last
 
-    addresses(response&.css('div.boxDep')[-1], item)
-    parties(response&.css('div.boxDep')[2]&.css('table'), item)
+    activity_node = nil
+
+    response&.css('div.boxDep').each do |node|
+      header = node&.css('h3')&.text&.squish
+
+      case header.downcase
+      when /grupul parlamentar/
+        parties(node&.css('table'), item)
+      when /biroul parlamentar/
+        addresses(node, item)
+      when /activitatea/
+        activity_node = node
+      end
+    end
 
     deputy_legislature = StoreDeputyInfo.new(item).call
 
-    activity(response&.css('div.boxDep')[-2]&.css('table'), item)
+    activity(activity_node&.css('table'), item)
 
     StoreDeputyActivity.new(data: item, deputy_legislature: deputy_legislature).call
     # save_to "result_nou.json", item, format: :pretty_json, position: false
@@ -59,10 +71,13 @@ class ParlamentScraper < Kimurai::Base
 
   def parties(table, item)
     array = []
+    last_name = nil
     table&.css('tr').each do |line|
       name = line&.css('td')[0]&.text&.squish&.split("Grupul parlamentar ").last
+      name = last_name unless name
       name = name[3..] if name[..2] == 'al '
       name = acronym(name)
+      last_name = name if name
       start_date = '2020-12-20'
       end_date = nil
 
@@ -130,7 +145,7 @@ class ParlamentScraper < Kimurai::Base
           end
         end
         item[:speakings] = array
-      when 'Propuneri legislative initiate:'
+      when 'Propuneri legislative initiate:', 'Propuneri legislative iniţiate:'
         item[:legislative_initiative_count] = value
         response&.css('div.grup-parlamentar-list table tbody tr').each do |li|
           val = li&.css('td')[1]&.text&.squish&.split('/')
@@ -141,7 +156,7 @@ class ParlamentScraper < Kimurai::Base
           }
         end
         item[:legislative_initiatives] = array
-      when 'Proiecte de hotarâre initiate:'
+      when 'Proiecte de hotarâre initiate:', 'Proiecte de hotarâre iniţiate:'
         item[:draft_decision_count] = value
         response&.css('div.grup-parlamentar-list table tbody tr').each do |li|
           val = li&.css('td')[1]&.text&.squish&.split('/')
@@ -152,7 +167,7 @@ class ParlamentScraper < Kimurai::Base
           }
         end
         item[:draft_decisions] = array
-      when 'Întrebari si interpelari:'
+      when 'Întrebari si interpelari:', 'Întrebari şi interpelări:'
         item[:question_count] = value
         response&.css('div.grup-parlamentar-list table tbody tr').each do |li|
           val = li&.css('td')[1]&.text&.squish&.split('/')
@@ -166,7 +181,7 @@ class ParlamentScraper < Kimurai::Base
           }
         end
         item[:questions] = array
-      when 'Motiuni:'
+      when 'Motiuni:', 'Moţiuni:'
         item[:motion_signed_count] = value
         response&.css('table.video-table tbody tr').each do |li|
           val = li&.css('td')[3]&.text&.squish&.split('/')
@@ -236,7 +251,7 @@ class ParlamentScraper < Kimurai::Base
         name = 'PNL'
       when /salvaţi românia/
         name = 'USR'
-      when /AUR/
+      when /aur/
         name = 'AUR'
       when /democrate maghiare din românia/
         name = 'UDMR'
