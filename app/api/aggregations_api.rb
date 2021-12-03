@@ -30,11 +30,24 @@ class AggregationsApi < Grape::API
       end
 
       parties_percentage.map do |circumscription, party_count_hash|
-        total = party_count_hash.values.sum.to_f
-        party_count_hash.map { |party, count| parties_percentage[circumscription][party] = count / total }
+        parties_percentage[circumscription].merge!(total: party_count_hash.values.sum)
       end
 
       present parties_percentage
+    end
+
+    resource :activity do
+      desc "Activity's percentage per party" do
+        tags %w[aggregation]
+        http_codes [
+          { code: 200, message: "Activity's percentage per party" }
+        ]
+      end
+      get do
+        activity_per_party = PartiesActivities.new.call
+
+        present activity_per_party
+      end
     end
   end
 end
