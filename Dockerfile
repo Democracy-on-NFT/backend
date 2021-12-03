@@ -8,24 +8,19 @@ RUN (curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -) && \
     echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list && \
     apt-get update && apt-get install -y yarn
 
-WORKDIR /app
+RUN apt-get update -qq && apt-get install -y nodejs postgresql-client
 
-COPY Gemfile Gemfile.lock ./
+WORKDIR /backend
 
-RUN gem install bundler && \
-    bundle config set --local deployment 'true' && \
-    bundle config set --local without 'development test' && \
-    bundle install
+COPY Gemfile /backend/Gemfile
+COPY Gemfile.lock /backend/Gemfile.lock
+RUN bundle install
 
-COPY . /app
-
-ENV RAILS_ENV=production
-ENV RAILS_SERVE_STATIC_FILES=true
-ENV RAILS_LOG_TO_STDOUT=true
-
-ARG MASTER_KEY
-ENV RAILS_MASTER_KEY=${MASTER_KEY}
-
-
+# Add a script to be executed every time the container starts.
+COPY entrypoint.sh /usr/bin/
+RUN chmod +x /usr/bin/entrypoint.sh
+ENTRYPOINT ["entrypoint.sh"]
 EXPOSE 3000
-CMD ["bin/rails", "server", "-b", "0.0.0.0", "-p", "3000"]
+
+# Configure the main process to run when running the image
+CMD ["rails", "server", "-b", "0.0.0.0"]
