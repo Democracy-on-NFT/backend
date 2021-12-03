@@ -56,12 +56,16 @@ class StoreDeputyInfo
   end
 
   def offices_mapping(deputy_id)
+    return unless data.key?(:addresses)
+
     data[:addresses].each do |address|
       find_or_create_office(deputy_id, address)
     end
   end
 
   def parties_mapping(deputy_id)
+    return unless data.key?(:parties)
+
     data[:parties].each do |deputy_party|
       party = party_by(deputy_party[:party])
       next if party.blank?
