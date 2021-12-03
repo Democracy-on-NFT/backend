@@ -5,7 +5,7 @@ require 'bundler/inline'
 class ParlamentScraper < Kimurai::Base
   @name = 'parlament_spider'
   @engine = :mechanize
-  @start_urls = ['http://www.cdep.ro/pls/parlam/structura2015.de?idl=1']
+  @start_urls = ['http://www.cdep.ro/pls/parlam/structura2015.de?idl=1', 'http://www.cdep.ro/pls/parlam/structura2015.de?leg=2020&cam=1']
   @config = {
     encoding: 'ISO-8859-2'
   }
@@ -14,7 +14,7 @@ class ParlamentScraper < Kimurai::Base
     @base_uri = 'http://www.cdep.ro'
     response = browser.current_response
 
-    response.css('div.grup-parlamentar-list table tbody tr').first(8).each do |line|
+    response.css('div.grup-parlamentar-list table tbody tr').first(10).each do |line|
       href = line.css('td')[1].css('a').attr('href')
       browser.visit(@base_uri + href)
       app_response = browser.current_response
@@ -36,7 +36,7 @@ class ParlamentScraper < Kimurai::Base
     item[:name] = response&.css('div.boxTitle h1')&.text&.squish
     item[:room] = response&.css('div.boxDep h3')[0]&.text&.squish
     item[:date_of_birth] = format_date(response&.css('div.profile-pic-dep')&.text&.squish)
-    item[:picture_url] = @base_uri + response&.css('div.profile-pic-dep a img')&.attr('src')&.text&.squish
+    item[:picture_url] = @base_uri + response&.css('div.profile-pic-dep img')&.attr('src')&.text&.squish
     item[:email] = response&.css('span.mailInfo')&.text&.squish
     item[:party] = response&.css('div.boxDep')[1]&.css('table tr td')&.text&.squish
     # periods = response&.css('div.profile-dep h3')&.text&.squish.split.last.split("-")
@@ -251,7 +251,7 @@ class ParlamentScraper < Kimurai::Base
         name = 'PNL'
       when /salvaţi românia/
         name = 'USR'
-      when /aur/
+      when /aur/, /unirea românilor/
         name = 'AUR'
       when /democrate maghiare din românia/
         name = 'UDMR'
