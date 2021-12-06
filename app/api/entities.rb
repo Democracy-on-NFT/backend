@@ -7,11 +7,17 @@ class Entities
     expose :county_name
   end
 
+  class Notification < Grape::Entity
+    expose :email
+    expose :electoral_circumscription, using: ElectoralCircumscription
+  end
+
   class Party < Grape::Entity
     expose :id, documentation: { type: Integer }
     expose :abbreviation
     expose :name
     expose :link
+    expose :logo
   end
 
   class Legislature < Grape::Entity
@@ -21,8 +27,22 @@ class Entities
     expose :end_date, documentation: { type: Date }
   end
 
+  class FullParty < Party
+    expose :legislatures, using: Legislature, documentation: { is_array: true }
+  end
+
   class Office < Grape::Entity
     expose :address
+  end
+
+  class DeputyLegislature < Grape::Entity
+    expose :legislative_initiatives_count, as: :legislative_initiatives
+    expose :signed_motions_count, as: :signed_motions
+    expose :speeches_count, as: :speeches
+    expose :draft_decisions_count, as: :draft_decisions
+    expose :questions_count, as: :questions
+    expose :legislature, using: Legislature
+    expose :electoral_circumscription, using: ElectoralCircumscription
   end
 
   class Deputy < Grape::Entity
@@ -30,7 +50,20 @@ class Entities
     expose :image_link
     expose :email
     expose :name
-    expose :offices, using: Office
+    expose :date_of_birth
+    expose :room
+  end
+
+  class DeputyParty < Grape::Entity
+    expose :start_date
+    expose :end_date
+    expose :party, using: Party
+  end
+
+  class FullDeputy < Deputy
+    expose :offices, using: Office, documentation: { is_array: true }
+    expose :deputy_parties, using: DeputyParty, as: :parties, documentation: { is_array: true }
+    expose :deputy_legislatures, using: DeputyLegislature, as: :activities, documentation: { is_array: true }
   end
 
   class Question < Grape::Entity

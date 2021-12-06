@@ -12,6 +12,7 @@ class RootApi < Grape::API
   mount LegislaturesApi
   mount DeputiesApi
   mount AggregationsApi
+  mount NotificationsApi
 
   add_swagger_documentation(
     format: :json,

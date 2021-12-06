@@ -3,7 +3,9 @@
 FactoryBot.define do
   factory :party do
     name { Faker::Lorem.words(number: 3).join(' ').titleize }
+    abbreviation { Faker::Hacker.abbreviation }
     link { Faker::File.file_name(dir: 'cdep', ext: 'jpg') }
+    logo { Faker::File.file_name(dir: 'logo', ext: 'jpg') }
 
     trait :with_deputies do
       transient do
