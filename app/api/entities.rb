@@ -52,6 +52,8 @@ class Entities
     expose :name
     expose :date_of_birth
     expose :room
+    expose :current_party, as: :party, using: Party
+    expose :current_electoral_circumscription, as: :circumscription, using: ElectoralCircumscription
   end
 
   class DeputyParty < Grape::Entity
