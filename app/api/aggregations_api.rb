@@ -82,7 +82,7 @@ class AggregationsApi < Grape::API
     get do
       circumscription_deputy_hash = DeputyLegislature.includes(:electoral_circumscription)
         .each_with_object({}) do |dl, h|
-        h[dl.deputy_id] = dl.electoral_circumscription.county_name
+        h[dl.deputy_id] = dl.electoral_circumscription.number
       end
       party_deputy_hash = DeputyParty.includes(:party).each_with_object({}) do |dp, h|
         h[dp.deputy_id] = dp.party.abbreviation
