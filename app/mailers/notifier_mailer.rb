@@ -9,9 +9,11 @@ class NotifierMailer < ApplicationMailer
 
     ec = ElectoralCircumscription.find(electoral_circumscription_id)
     activity_month = "#{Date.current.month - 1} - #{Date.current.year}"
-    subject = "Activitate parlamentarilor din circumscripția #{ec.number} în luna #{activity_month}"
+    subject = "Activitatea parlamentarilor din circumscripția #{ec.number} în luna #{activity_month}"
 
     # TODO: update the logic on this part
+    # https://berislavbabic.com/send-pdf-attachments-from-rails-with-wickedpdf-and-actionmailer/
+    # https://mailtrap.io/blog/ruby-send-email/
     attachments['ActivitateParlamentari.pdf'] = WickedPdf.new.pdf_from_string(
       render_to_string(
         pdf: 'monthly_report',
