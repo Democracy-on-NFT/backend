@@ -9,7 +9,7 @@ class AggregationsApi < Grape::API
       ]
     end
     params do
-      requires :legislature_id, type: Integer
+      requires :legislature_id, type: Integer, values: Legislature.pluck(:id)
     end
     get do
       deputies_by_county = DeputyLegislature.where(legislature_id: params[:legislature_id])
@@ -40,7 +40,7 @@ class AggregationsApi < Grape::API
       ]
     end
     params do
-      requires :legislature_id, type: Integer
+      requires :legislature_id, type: Integer, values: Legislature.pluck(:id)
     end
     get do
       deputies_by_room = DeputyLegislature.where(legislature_id: params[:legislature_id])

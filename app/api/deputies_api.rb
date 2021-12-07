@@ -11,9 +11,14 @@ class DeputiesApi < Grape::API
     params do
       optional :page, type: Integer, default: 1
       optional :per_page, type: Integer, default: 20
+      optional :room, type: Integer, values: Deputy.rooms.values
     end
     get do
-      deputies = Deputy.includes(:offices).page(params[:page]).per(params[:per_page])
+      room = params.key?(:room) ? params[:room] : Deputy.rooms.values
+      deputies = Deputy
+        .includes(:offices, :parties, deputy_legislatures: :electoral_circumscription)
+        .where(room: room)
+        .page(params[:page]).per(params[:per_page])
       present deputies, with: Entities::Deputy
     end
 
@@ -27,7 +32,7 @@ class DeputiesApi < Grape::API
       end
 
       params do
-        requires :legislature_id, type: Integer
+        requires :legislature_id, type: Integer, values: Legislature.pluck(:id)
       end
       get 'activity' do
         deputy_activity = DeputyLegislature.where(deputy_id: params[:id], legislature_id: params[:legislature_id]).first
@@ -43,7 +48,7 @@ class DeputiesApi < Grape::API
       end
 
       params do
-        requires :legislature_id, type: Integer
+        requires :legislature_id, type: Integer, values: Legislature.pluck(:id)
       end
       get do
         deputy_legislature = DeputyLegislature.where(deputy_id: params[:id],
