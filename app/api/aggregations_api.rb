@@ -14,10 +14,14 @@ class AggregationsApi < Grape::API
     get do
       deputies_by_county = DeputyLegislature.where(legislature_id: params[:legislature_id])
         .includes(:electoral_circumscription, :deputy)
-        .group_by { |dl| dl.electoral_circumscription.county_name }
+        .group_by { |dl| dl.electoral_circumscription.number }
 
       deputies_number_by_county = deputies_by_county.each_with_object({}) do |(key, value), hash|
-        count_by_room = { deputati: 0, senatori: 0 }
+        count_by_room = {
+          deputati: 0,
+          senatori: 0,
+          county_name: value.first.electoral_circumscription.county_name
+        }
         value.each do |dl|
           if dl.deputy.room == 'deputat'
             count_by_room[:deputati] += 1
