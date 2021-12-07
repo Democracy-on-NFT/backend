@@ -32,7 +32,7 @@ class DeputiesApi < Grape::API
       end
 
       params do
-        requires :legislature_id, type: Integer, values: Legislature.pluck(:id)
+        requires :legislature_id, type: Integer, values: -> { Legislature.all.map(&:id) }
       end
       get 'activity' do
         deputy_activity = DeputyLegislature.where(deputy_id: params[:id], legislature_id: params[:legislature_id]).first
@@ -48,7 +48,7 @@ class DeputiesApi < Grape::API
       end
 
       params do
-        requires :legislature_id, type: Integer, values: Legislature.pluck(:id)
+        requires :legislature_id, type: Integer, values: -> { Legislature.all.map(&:id) }
       end
       get do
         deputy_legislature = DeputyLegislature.where(deputy_id: params[:id],

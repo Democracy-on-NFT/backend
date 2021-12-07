@@ -34,7 +34,7 @@ class PartiesApi < Grape::API
         ]
       end
       params do
-        requires :legislature_id, type: Integer, values: Legislature.pluck(:id)
+        requires :legislature_id, type: Integer, values: -> { Legislature.all.map(&:id) }
       end
       get 'deputies/activity' do
         deputies_ids = Party.find(params[:id]).deputies.map(&:id)
