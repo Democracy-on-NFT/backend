@@ -17,7 +17,17 @@ The backend for BC Democracy platform
 * Database creation & initialization
   * `rails db:setup`
 
+* Run scraper and populate DB
+  * `rails -vT` - check all the rake tasks
+  * `rails parlament:scrapper`
+
 * Run application locally
   * `rails s`
   * check it: `localhost:3000`
   * API swagger: `localhost:3000/docs`
+
+* Docker way
+  * https://docs.docker.com/samples/rails/
+  * `docker-compose run web rake db:setup`
+  * `docker-compose run web rake parlament:scrapper`
+  * `docker-compose up`

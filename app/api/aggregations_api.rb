@@ -9,15 +9,19 @@ class AggregationsApi < Grape::API
       ]
     end
     params do
-      requires :legislature_id, type: Integer
+      requires :legislature_id, type: Integer, values: -> { Legislature.all.map(&:id) }
     end
     get do
       deputies_by_county = DeputyLegislature.where(legislature_id: params[:legislature_id])
         .includes(:electoral_circumscription, :deputy)
-        .group_by { |dl| dl.electoral_circumscription.county_name }
+        .group_by { |dl| dl.electoral_circumscription.number }
 
       deputies_number_by_county = deputies_by_county.each_with_object({}) do |(key, value), hash|
-        count_by_room = { deputati: 0, senatori: 0 }
+        count_by_room = {
+          deputati: 0,
+          senatori: 0,
+          county_name: value.first.electoral_circumscription.county_name
+        }
         value.each do |dl|
           if dl.deputy.room == 'deputat'
             count_by_room[:deputati] += 1
@@ -40,7 +44,7 @@ class AggregationsApi < Grape::API
       ]
     end
     params do
-      requires :legislature_id, type: Integer
+      requires :legislature_id, type: Integer, values: -> { Legislature.all.map(&:id) }
     end
     get do
       deputies_by_room = DeputyLegislature.where(legislature_id: params[:legislature_id])
@@ -78,7 +82,7 @@ class AggregationsApi < Grape::API
     get do
       circumscription_deputy_hash = DeputyLegislature.includes(:electoral_circumscription)
         .each_with_object({}) do |dl, h|
-        h[dl.deputy_id] = dl.electoral_circumscription.county_name
+        h[dl.deputy_id] = dl.electoral_circumscription.number
       end
       party_deputy_hash = DeputyParty.includes(:party).each_with_object({}) do |dp, h|
         h[dp.deputy_id] = dp.party.abbreviation
@@ -110,8 +114,15 @@ class AggregationsApi < Grape::API
           { code: 200, message: "Activity's percentage per party" }
         ]
       end
+      params do
+        requires :legislature_id, type: Integer, values: -> { Legislature.all.map(&:id) }
+        optional :deputies_ids, type: Array[Integer]
+      end
       get do
-        activity_per_party = PartiesActivities.new.call
+        activity_per_party = PartiesActivities.new(
+          deputies_ids: params[:deputies_ids],
+          legislature_id: params[:legislature_id]
+        ).call
 
         present activity_per_party
       end

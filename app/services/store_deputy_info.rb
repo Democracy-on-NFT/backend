@@ -88,7 +88,13 @@ class StoreDeputyInfo
   end
 
   def deputy_type(room)
-    room == 'DEPUTAT' ? 1 : 0
+    case room.downcase
+    when /deputat/
+      room_int = 1
+    when /senator/
+      room_int = 0
+    end
+    room_int
   end
 
   def parse_date(string_date)
