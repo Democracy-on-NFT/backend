@@ -3,6 +3,7 @@
 class ScraperWorker
   include Sidekiq::Worker
 
+  # rubocop:disable Metrics/AbcSize
   def perform(*_args)
     Question.all.find_each do |q|
       BigchaindbCall.new(q).call
@@ -24,4 +25,5 @@ class ScraperWorker
       BigchaindbCall.new(li).call
     end
   end
+  # rubocop:enable Metrics/AbcSize
 end
