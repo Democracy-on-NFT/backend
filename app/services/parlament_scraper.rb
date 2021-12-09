@@ -14,7 +14,7 @@ class ParlamentScraper < Kimurai::Base
     @base_uri = 'http://www.cdep.ro'
     response = browser.current_response
 
-    response.css('div.grup-parlamentar-list table tbody tr').first(10).each do |line|
+    response.css('div.grup-parlamentar-list table tbody tr').each do |line|
       href = line.css('td')[1].css('a').attr('href')
       browser.visit(@base_uri + href)
       app_response = browser.current_response
@@ -112,6 +112,8 @@ class ParlamentScraper < Kimurai::Base
   end
 
   def activity(table, item)
+    return if table&.css('tr').nil?
+
     table&.css('tr').each do |line|
       value = line&.css('td')[1]&.text&.squish
       href = line&.css('td')[1]&.css('a')&.attr('href')
@@ -199,6 +201,8 @@ class ParlamentScraper < Kimurai::Base
 
   def parse_date(date)
     Date.parse(date).iso8601 if date
+  rescue Date::Error
+    nil
   end
 
   def date(text)

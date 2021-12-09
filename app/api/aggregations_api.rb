@@ -114,8 +114,15 @@ class AggregationsApi < Grape::API
           { code: 200, message: "Activity's percentage per party" }
         ]
       end
+      params do
+        requires :legislature_id, type: Integer, values: -> { Legislature.all.map(&:id) }
+        optional :deputies_ids, type: Array[Integer]
+      end
       get do
-        activity_per_party = PartiesActivities.new.call
+        activity_per_party = PartiesActivities.new(
+          deputies_ids: params[:deputies_ids],
+          legislature_id: params[:legislature_id]
+        ).call
 
         present activity_per_party
       end

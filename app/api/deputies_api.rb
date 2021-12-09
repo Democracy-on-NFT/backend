@@ -18,7 +18,7 @@ class DeputiesApi < Grape::API
       deputies = Deputy
         .includes(:offices, :parties, deputy_legislatures: :electoral_circumscription)
         .where(room: room)
-        .page(params[:page]).per(params[:per_page])
+      # .page(params[:page]).per(params[:per_page])
       present deputies, with: Entities::Deputy
     end
 
