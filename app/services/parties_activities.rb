@@ -1,11 +1,18 @@
 # frozen_string_literal: true
 
 class PartiesActivities
+  def initialize(deputies_ids:, legislature_id:)
+    @deputies_ids = deputies_ids
+    @legislature_id = legislature_id
+  end
+
   def call
     activity_per_party_hash
   end
 
   private
+
+  attr_reader :deputies_ids, :legislature_id
 
   # rubocop:disable Metrics/AbcSize
   def activity_per_party_hash
@@ -27,17 +34,17 @@ class PartiesActivities
       end
     end
 
-    activity_per_party = count_total_activities(activity_per_party)
-
-    activity_per_party[:total_deputati] = group_by_room['deputat'].count
-    activity_per_party[:total_senatori] = group_by_room['senator'].count
-
-    activity_per_party
+    merge_activities(activity_per_party, group_by_room)
   end
   # rubocop:enable Metrics/AbcSize
 
   def deputy_legislatures
-    DeputyLegislature.where(legislature: Legislature.last).includes(deputy: :parties)
+    if deputies_ids.blank?
+      DeputyLegislature.where(legislature_id: Legislature.last).includes(deputy: :parties)
+    else
+      DeputyLegislature.where(legislature_id: Legislature.last, deputy_id: deputies_ids)
+        .includes(deputy: :parties)
+    end
   end
 
   def initial_aggregated_activity
@@ -82,4 +89,13 @@ class PartiesActivities
     activity_per_party
   end
   # rubocop:enable Metrics/AbcSize
+
+  def merge_activities(activity_per_party, group_by_room)
+    activity_per_party = count_total_activities(activity_per_party)
+
+    activity_per_party[:total_deputati] = group_by_room['deputat']&.count || 0
+    activity_per_party[:total_senatori] = group_by_room['senator']&.count || 0
+
+    activity_per_party
+  end
 end
