@@ -1,2 +1,26 @@
-<= @ec.number >
-<= @ec.county_name >
+<h1> Circumscriptia electorala: <%= ec.number %> / <%= ec.county_name %> </h1>
+
+<table style="width:100%">
+  <thead>
+    <tr>
+      <th>Nume</th>
+      <th>Tip activitate</th>
+      <th>Activitate</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% deputies.each do |deputy| %>
+      <tr>
+        <td><%= deputy.name %></td>
+        <td>tip activitate</td>
+        <td>activitate</td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<style>
+table, th, td {
+  border:1px solid black;
+}
+</style>
