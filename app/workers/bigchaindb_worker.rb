@@ -1,29 +1,9 @@
 # frozen_string_literal: true
 
-class ScraperWorker
+class BigchaindbWorker
   include Sidekiq::Worker
 
-  # rubocop:disable Metrics/AbcSize
   def perform(*_args)
-    Question.all.find_each do |q|
-      BigchaindbCall.new(q).call
-    end
-
-    DraftDecision.all.find_each do |dd|
-      BigchaindbCall.new(dd).call
-    end
-
-    Speech.all.find_each do |s|
-      BigchaindbCall.new(s).call
-    end
-
-    SignedMotion.all.find_each do |sm|
-      BigchaindbCall.new(sm).call
-    end
-
-    LegislativeInitiative.all.find_each do |li|
-      BigchaindbCall.new(li).call
-    end
+    PushActivitiesToBdb.new.call
   end
-  # rubocop:enable Metrics/AbcSize
 end
