@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class BigchaindbCall
-  URL = 'http://4e50-2a02-2f0e-f908-e900-232f-b673-3dcd-b45.ngrok.io/api/v1/deputies'
+  URL = ENV['BDB_URL']
 
   def initialize(activity)
     @activity = activity
@@ -21,7 +21,7 @@ class BigchaindbCall
       "data":
         {
           "title": activity.title,
-          "date": activity.date,
+          "date": activity.date || '',
           "type": activity_type(activity.class.name)
         }
     }
@@ -43,7 +43,7 @@ class BigchaindbCall
   end
 
   def bigchain_post
-    url = "#{URL}/#{id}/activities/"
+    url = "#{URL}/api/v1/deputies/#{id}/activities/"
     uri = URI.parse(url)
     http = Net::HTTP.new(uri.host, uri.port)
     http.use_ssl = false
