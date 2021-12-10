@@ -1,0 +1,61 @@
+<h1> Circumscriptia electorala: <%= ec.number %> / <%= ec.county_name %> </h1>
+
+<table style="width:100%">
+  <% index = true %>
+  <% if index %>
+  <thead>
+    <tr>
+      <th>Nume</th>
+      <th>Luări de cuvânt</th>
+      <th>Propuneri legislative</th>
+      <th>Întrebări și interpelări</th>
+      <th>Moțiuni</th>
+      <th>Proiecte de hotărâre</th>
+    </tr>
+  </thead>
+  <% index = false %>
+  <% end %>
+  <tbody>
+    <% deputies.each do |deputy| %>
+      <tr>
+        <td>
+          <center>
+            <b><%= deputy.deputy.name %><br><br><br><b>
+            <b><%= deputy.deputy.current_party.abbreviation %></b>
+          </center>
+        </td>
+        <td>
+        <% deputy.speeches.last(3).each do |s| %>
+          <%= s.title %><br>
+        <% end%>
+        </td>
+        <td>
+        <% deputy.legislative_initiatives.last(3).each do |li| %>
+          <%= li.title %><br>
+        <% end%>
+        </td>
+        <td>
+        <% deputy.questions.last(3).each do |q| %>
+          <%= q.title %><br>
+        <% end%>
+        </td>
+        <td>
+        <% deputy.signed_motions.last(3).each do |sm| %>
+          <%= sm.title %><br>
+        <% end%>
+        </td>
+        <td>
+        <% deputy.draft_decisions.last(3).each do |dd| %>
+          <%= dd.title %><br>
+        <% end%>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<style>
+table, th, td {
+  border:1px solid black;
+}
+</style>
