@@ -7,3 +7,7 @@
     cron: '0 9 1 * * Europe/Bucharest'   # Runs monthly at 00:00
     class: NotifierWorker
     queue: notifications
+  bigchaindb:
+    cron: '30 0 1 * * Europe/Bucharest'
+    class: BigchaindbWorker
+    queue: bigchain

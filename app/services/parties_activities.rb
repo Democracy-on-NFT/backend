@@ -1,15 +1,25 @@
 # frozen_string_literal: true
 
 class PartiesActivities
+  def initialize(deputies_ids:, legislature_id:)
+    @deputies_ids = deputies_ids
+    @legislature_id = legislature_id
+  end
+
   def call
     activity_per_party_hash
   end
 
   private
 
+  attr_reader :deputies_ids, :legislature_id
+
   # rubocop:disable Metrics/AbcSize
   def activity_per_party_hash
-    activity_per_party = deputy_legislatures.each_with_object({}) do |dl, h|
+    deputies_legislatures = deputy_legislatures
+    group_by_room = deputies_legislatures.group_by { |dl| dl.deputy.room }
+
+    activity_per_party = deputies_legislatures.each_with_object({}) do |dl, h|
       abbreviation = dl.deputy.parties.last.abbreviation
       if h[abbreviation]
         h[abbreviation][:legislative_initiatives_count] += dl.legislative_initiatives_count
@@ -17,17 +27,24 @@ class PartiesActivities
         h[abbreviation][:speeches_count] += dl.speeches_count
         h[abbreviation][:draft_decisions_count] += dl.draft_decisions_count
         h[abbreviation][:questions_count] += dl.questions_count
+        h[abbreviation][:senatori] += (dl.deputy.room == 'senator' ? 1 : 0)
+        h[abbreviation][:deputati] += (dl.deputy.room == 'deputat' ? 1 : 0)
       else
         h[abbreviation] = aggregated_activity(dl)
       end
     end
 
-    count_total_activities(activity_per_party)
+    merge_activities(activity_per_party, group_by_room)
   end
   # rubocop:enable Metrics/AbcSize
 
   def deputy_legislatures
-    DeputyLegislature.where(legislature: Legislature.last).includes(deputy: :parties)
+    if deputies_ids.blank?
+      DeputyLegislature.where(legislature_id: Legislature.last).includes(deputy: :parties)
+    else
+      DeputyLegislature.where(legislature_id: Legislature.last, deputy_id: deputies_ids)
+        .includes(deputy: :parties)
+    end
   end
 
   def initial_aggregated_activity
@@ -46,7 +63,9 @@ class PartiesActivities
       signed_motions_count: deputy_legislature.signed_motions_count,
       speeches_count: deputy_legislature.speeches_count,
       draft_decisions_count: deputy_legislature.draft_decisions_count,
-      questions_count: deputy_legislature.questions_count
+      questions_count: deputy_legislature.questions_count,
+      senatori: deputy_legislature.deputy.room == 'senator' ? 1 : 0,
+      deputati: deputy_legislature.deputy.room == 'deputat' ? 1 : 0
     }
   end
 
@@ -70,4 +89,13 @@ class PartiesActivities
     activity_per_party
   end
   # rubocop:enable Metrics/AbcSize
+
+  def merge_activities(activity_per_party, group_by_room)
+    activity_per_party = count_total_activities(activity_per_party)
+
+    activity_per_party[:total_deputati] = group_by_room['deputat']&.count || 0
+    activity_per_party[:total_senatori] = group_by_room['senator']&.count || 0
+
+    activity_per_party
+  end
 end

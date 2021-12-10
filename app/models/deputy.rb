@@ -10,4 +10,12 @@ class Deputy < ApplicationRecord
 
   has_many :deputy_legislatures
   has_many :legislatures, through: :deputy_legislatures
+
+  def current_party
+    parties.last
+  end
+
+  def current_electoral_circumscription
+    deputy_legislatures.last.electoral_circumscription
+  end
 end
