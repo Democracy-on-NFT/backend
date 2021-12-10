@@ -15,8 +15,8 @@ class NotifierMailer < ApplicationMailer
     # TODO: update the logic on this part
     # https://berislavbabic.com/send-pdf-attachments-from-rails-with-wickedpdf-and-actionmailer/
     # https://mailtrap.io/blog/ruby-send-email/
-
-    deputies = ec.deputy_legislatures.includes(:deputy).map(&:deputy)
+    deputies = ec.deputy_legislatures
+      .includes(:speeches, :legislative_initiatives, :questions, :signed_motions, :draft_decisions, deputy: :parties)
 
     pdf_string = render_to_string(
       pdf: 'monthly_report',
