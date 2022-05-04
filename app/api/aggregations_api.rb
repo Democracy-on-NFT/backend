@@ -72,6 +72,25 @@ class AggregationsApi < Grape::API
     end
   end
 
+  resource :deputy_percentage do
+    desc 'Activities per month per deputy' do
+      tags %w[aggregation]
+      http_codes [
+        { code: 200, message: 'Activities per month per deputy' }
+      ]
+    end
+    params do
+      requires :legislature_id, type: Integer, values: -> { Legislature.all.map(&:id) }
+      requires :deputy_id, type: Integer
+    end
+    get do
+      deputy_activities = DeputyActivities.new(legislature_id: params[:legislature_id],
+                                               deputy_id: params[:deputy_id]).call
+
+      present deputy_activities
+    end
+  end
+
   resource :parties_percentage do
     desc 'Parties percentage per county' do
       tags %w[aggregation]
